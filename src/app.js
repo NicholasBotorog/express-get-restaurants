@@ -1,10 +1,23 @@
 const express = require("express");
 const app = express();
-const {Restaurant} = require("../models/index")
-const {db} = require("../db/connection");
+const { Restaurant, Menu, Item } = require("../models/index.js")
+const { db } = require("../db/connection");
+
+
+app.use(express.json())
+app.use(express.urlencoded())
 
 app.get('/restaurants', async(req, res) => { 
-    const restaurantList = await Restaurant.findAll()
+    const restaurantList = await Restaurant.findAll(
+        {
+            include: Menu, 
+            include: [{
+                model: Menu, 
+                include: [{
+                    model: Item
+                }]
+            }]
+        })
     res.json(restaurantList)
     res.status(200)
 })
