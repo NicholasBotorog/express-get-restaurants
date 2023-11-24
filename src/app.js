@@ -3,6 +3,12 @@ const app = express();
 const {Restaurant} = require("../models/index")
 const {db} = require("../db/connection");
 
+app.get('/restaurants', async(req, res) => { 
+    const restaurantList = await Restaurant.findAll()
+    res.json(restaurantList)
+    res.status(200)
+})
+
 //TODO: Create your GET Request Route Below: 
 app.get('/restaurants/:id', async(req,res) => { 
     const restaurant = await Restaurant.findByPk(req.params.id)
@@ -20,7 +26,7 @@ app.post('/restaurants', async(req,res)=>{
             res.sendStatus(404)
         }
 
-        res.send(restaurant)
+        res.json(restaurant)
     } catch(error){
         console.log(error)
     }
@@ -42,7 +48,7 @@ app.put('/restaurants/:id', async(req, res) => {
 
 app.delete('/restaurants/:id', async(req, res) => { 
     try{
-        const updated = await Restaurant.destroy({
+         await Restaurant.destroy({
             where: { id: req.params.id },
         })
         
@@ -55,4 +61,4 @@ app.delete('/restaurants/:id', async(req, res) => {
 
 
 
-module.exports = app;
+module.exports = {app};

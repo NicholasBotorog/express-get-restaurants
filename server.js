@@ -8,6 +8,7 @@ const port = 3000;
 app.get('/restaurants', async(req, res) => { 
     const restaurantList = await Restaurant.findAll()
     res.json(restaurantList)
+    res.status(200)
 })
 
 
