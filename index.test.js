@@ -1,5 +1,5 @@
 const request = require("supertest")
-const { app } = require('./src/app')
+const { app, response } = require('./src/app')
 const { Restaurant } = require('./models/Restaurant')
 const {syncSeed} = require('./seed.js')
 
@@ -81,6 +81,14 @@ describe('Testing Endpoints', () =>{
         const restaurants = await Restaurant.findAll({})
         expect(restaurants.length).toEqual(resLen);
         expect(restaurants[1].id).not.toEqual(1)
+    })
+
+    test('Should return errors array if fields are empty', async()=>{
+        const res = await request(app)
+            .post('/restaurants')
+            .send({ name: 'Balkan' })
+        expect(res.body).toHaveProperty('errors')
+        expect(Array.isArray(res.body.errors)).toBe(true)
     })
 
   })
